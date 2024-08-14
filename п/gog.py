@@ -606,3 +606,404 @@
 # 			        font = 15,
 # 				    command = bym)
 # cnopka_bym.place(x = 65, y = 160)
+
+from tkinter import *
+from random import *
+
+# Переменная ну и содаем окно
+root = Tk()
+#тут размер окна 
+root.geometry('300x400')
+# это строка кода вопше не обезательна в принципе она просто запрещает изминять разрешение приложения ну экрана короче
+root.resizable(width=False, height=False)
+#title переобразует первое слово в заглавное
+root.title('камень, ножницы, бумага')
+# Это делает фон зеленым
+root['bg'] = 'Green'
+
+
+# def kamen():
+#     knb = ['Камень', 'Ножницы', 'Бумага']
+#     camputer = choice(knb)
+#     text_2['text'] = f'ГЕНИЙ ИИ: {camputer}'
+
+#     if camputer == knb[0]:
+#         text_3['text'] = 'Выиграли: Ничья'
+#     if camputer == knb[1]:
+#         text_3['text'] = 'Выиграли: Вы. На самом деле вам просто повезло ТРАТЬТЕ ЖЕ СВОЮ УДАЧУ'
+#     if camputer == knb[2]:
+#         text_3['text'] = 'Выиграл: ГЕНИЙ ИИ. Вы же, не кто по сравнению с ии-)'
+
+
+# def nojnic():
+#     noj = ['Камень', 'Ножницы', 'Бумага']
+#     camputer = choice(noj)
+#     text_2['text'] = f'ГЕНИЙ ИИ: {camputer}'
+
+#     if camputer == noj[0]:
+#         text_3['text'] = 'Выиграл: ГЕНИЙ ИИ. Вы же, не кто по сравнению с ии-)'
+#     if camputer == noj[1]:
+#         text_3['text'] = 'Выиграли: Ничья'
+#     if camputer == noj[2]:
+#         text_3['text'] = 'Выиграли: Вы. На самом деле вам просто повезло ТРАТЬТЕ ЖЕ СВОЮ УДАЧУ'
+
+
+# def bym():
+#     bymaga = ['Камень', 'Ножницы', 'Бумага']
+#     camputer = choice(bymaga)
+#     text_2['text'] = f'ГЕНИЙ ИИ: {camputer}'
+
+#     if camputer == bymaga[0]:
+#         text_3['text'] = 'Выиграли: Вы. На самом деле вам просто повезло ТРАТЬТЕ ЖЕ СВОЮ УДАЧУ'
+#     if camputer == bymaga[1]:
+#         text_3['text'] = 'Выиграл: ГЕНИЙ ИИ. Вы же, не кто по сравнению с ии-)'
+#     if camputer == bymaga[2]:
+#         text_3['text'] = 'Выиграли: Ничья'
+
+
+# #label- это окошко или пространство где можно что-то написать и там можно поместить что-то ну там фото или ищё что-то
+# text_2 = Label(text='ГЕНИЙ ИИ',
+#                bg='black',
+#                fg='Green',
+#                font=15)
+# text_2.place(x=50, y=40)
+
+# text_3 = Label(text='Выигравший эту жизнь',
+#                bg='black',
+#                fg='Green',
+#                font=15)
+# text_3.place(x=20, y=100)
+
+# # Ну тож создаёт кнопочки
+# cnopka_camen = Button(text='Камень',
+#                       bg='black',
+#                       fg='Green',
+#                       font=15,
+#                       command=kamen)
+# cnopka_camen.place(x=65, y=160)
+
+# cnopka_nojnic = Button(text='Ножницы',
+#                        bg='black',
+#                        fg='Green',
+#                        font=15,
+#                        command=nojnic)
+# cnopka_nojnic.place(x=65, y=220)
+
+# cnopka_bym = Button(text='Бумага',
+#                     bg='black',
+#                     fg='Green',
+#                     font=15,
+#                     command=bym)
+# cnopka_bym.place(x=65, y=280)
+
+# # mainloop это чтото типо while True бесконечность короче делает так чтобы оно работало вечно я не знаю как но без него окошко не появиться
+# root.mainloop()
+
+
+
+
+
+
+
+
+"Абстракция"
+
+# class Shape:
+#     def area(self):
+#         pass 
+    
+#     def perimeter(self):
+#         pass 
+    
+# class Square(Shape):
+#     def __init__(self, side):
+#         self.side = side
+        
+#     def area(self):
+#         return self.side * 2 
+    
+#     def perimeter(self):
+#         return 4 * self.side 
+    
+# class Circle(Shape):
+#     def __init__(self, radius):
+#         self.radius = radius
+        
+#     def area(self):
+#         return 3.14 * self.radius ** 2
+    
+#     def perimeter(self):
+#         return 2 * 3.14 * self.radius
+    
+# # square = Square(4)
+# # print(f'Площадь квадрата {square.area()}')
+# # print(f'Периметр квадрата {square.perimeter()}')
+
+# # circle = Circle(3)
+# # print(f'Площадь круга {circle.area()}')
+# # print(f'Периметр круга {circle.perimeter()}')
+    
+    
+# class Vehicle:
+#     def start_engine(self):
+#         pass 
+    
+#     def stop_engine(self):
+#         pass
+    
+#     def drive(self):
+#         pass 
+    
+# class Car(Vehicle):
+#     def start_engine(self):
+#         return "Двигатель автомобился заведен"
+    
+#     def stop_engine(self):
+#         return 'Двигатель автомобиля не заведен'
+    
+#     def drive(self):
+#         return "Автомобиль едет"
+    
+# class Bicycle(Vehicle):
+#     def start_engine(self):
+#         return 'У велосипеда нет двигателя'
+    
+#     def stop_engine(self):
+#         return 'У велосипеда нет двигателя'
+
+#     def drive(self):
+#         return 'Велосипед едет'    
+    
+# car = Car()
+
+# print(car.start_engine())
+# print(car.stop_engine())
+# print(car.drive())
+
+
+
+# from canculator import plus, multiplication, minus, dele
+# from palid import pal
+# from step import exponentiate
+
+# while True:
+            
+#             choice = input("Выберите действие (арифметика, палиндром, степень, выход): ").strip().lower()
+#             print(f"Ваш выбор: {choice}")
+            
+#             if choice == 'выход':
+#                 print("Выход из программы")
+#                 break
+#             elif choice == 'арифметика':
+#                 operation = input("Выберите операцию (сложение, вычитание, умножение, деление): ").strip().lower()
+#                 x = float(input("Введите первое число: "))
+#                 y = float(input("Введите второе число: "))
+                
+#                 if operation == 'сложение':
+#                     print(f"Результат: {plus(x, y)}")
+#                 elif operation == 'вычитание':
+#                     print(f"Результат: {minus(x, y)}")
+#                 elif operation == 'деление':
+#                     print(f"Результат: {dele(x, y)}")
+#                 elif operation == 'умножение':
+#                     print(f"Результат: {multiplication(x, y)}")
+#                 else:
+#                     print("Неизвестная операция")
+
+#             elif choice == 'степень':
+#                 base = int(input("Введите число для возведения в степень: "))
+#                 exp = int(input("Введите степень: "))
+#                 print(f"Результат: {exponentiate(base, exp)}")
+           
+#             elif choice == 'палиндром':
+#                 s = input("Введите строку: ")
+#                 print(f"Это палиндром: {pal(s)}")
+#             else:
+#                 print("Неизвестное действие")
+
+
+
+
+
+
+
+# "Абстракция"
+
+# class Shape:
+# 	def area(self):
+# 		pass
+# 	def perimetor(self):
+# 		pass
+	
+
+# class Square(Shape):
+# 	def __init__(self, side):
+# 		self.side = side 
+		
+# 	def area(self):
+#         return self.side * 2 
+	
+#     def perimetor(self):
+#         return 4 * self.side
+	
+
+# class Circle(Shape):
+		
+#     def __init__(self, radius):
+#         self.radius = radius
+	
+#     def area(self):
+#         return 3.14 * self.radius ** 2
+	
+#     def perimetor(self):
+#         return 2 * 3.14 * self.radius
+	
+    
+# sqeare = Square(4)
+# print(f'Площадь квадрата: {sqeare.area()}')
+# print(f'Периметр квадрат: {sqeare.peremetre()}')
+      
+
+
+
+# crue = Circle(3)
+      
+# print(f'Площадь круга: {crue.area()}')
+# print(f'Периметр круга: {crue.perimetor()}')
+      
+
+
+# class Vehicle:
+#     def start_engiene(self):
+#         pass
+
+#     def stop_engiene(self):
+#         pass
+
+#     def drive(self):
+#         pass
+
+# class Car(Vehicle):
+#     def start_engiene(self):
+#         return "Двигатель заведён"
+    
+#     def stop_engiene(self):
+#         return "Двигатель авто не завендён"
+    
+#     def drive(self):
+#         return "Авто едет"
+
+# class Bicycle(Vehicle):
+
+#     def start_engiene(self):
+#         return "У велосипеда нет движка"
+    
+#     def stop_engiene(self):
+#         return "Там знак стоп"
+    
+#     def drive(self):
+#         return "Велосипед не едет"
+    
+
+# car = Car()
+# print(car.start_engiene())
+# print(car.stop_engiene())
+# print(car.drive())
+
+# bicycle = Bicycle()
+# print(bicycle.start_engiene())
+# print(bicycle.stop_engiene())
+# print(bicycle.drive())
+  
+
+# from tkinter import *
+# from random import *
+
+# # Переменная ну и содаем окно
+# root = Tk()
+# #тут размер окна 
+# root.geometry('1920x1080')
+# # это строка кода вопше не обезательна в принципе она просто запрещает изминять разрешение приложения ну экрана короче
+# root.resizable(width=False, height=False)
+# #title переобразует первое слово в заглавное
+# root.title('камень, ножницы, бумага')
+# # Это делает фон зеленым
+# root['bg'] = 'Green'
+
+
+# def kamen():
+#     knb = ['Камень', 'Ножницы', 'Бумага']
+#     camputer = choice(knb)
+#     text_2['text'] = f'ГЕНИЙ ИИ: {camputer}'
+
+#     if camputer == knb[0]:
+#         text_3['text'] = 'Выиграли: Ничья'
+#     if camputer == knb[1]:
+#         text_3['text'] = 'Выиграли: xx'
+#     if camputer == knb[2]:
+#         text_3['text'] = 'Выиграл: ГЕНИЙ ИИ. Вы же, не кто по сравнению с ии-)'
+
+
+# def nojnic():
+#     noj = ['Камень', 'Ножницы', 'Бумага']
+#     camputer = choice(noj)
+#     text_2['text'] = f'ГЕНИЙ ИИ: {camputer}'
+
+#     if camputer == noj[0]:
+#         text_3['text'] = 'Выиграл: ГЕНИЙ ИИ. Вы же, не кто по сравнению с ии-)'
+#     if camputer == noj[1]:
+#         text_3['text'] = 'Выиграли: Ничья'
+#     if camputer == noj[2]:
+#         text_3['text'] = 'Выиграли: Вы. На самом деле вам просто повезло ТРАТЬТЕ ЖЕ СВОЮ УДАЧУ'
+
+
+# def bym():
+#     bymaga = ['Камень', 'Ножницы', 'Бумага']
+#     camputer = choice(bymaga)
+#     text_2['text'] = f'ГЕНИЙ ИИ: {camputer}'
+
+#     if camputer == bymaga[0]:
+#         text_3['text'] = 'Выиграли: Вы. На самом деле вам просто повезло ТРАТЬТЕ ЖЕ СВОЮ УДАЧУ'
+#     if camputer == bymaga[1]:
+#         text_3['text'] = 'Выиграл: ГЕНИЙ ИИ. Вы же, не кто по сравнению с ии-)'
+#     if camputer == bymaga[2]:
+#         text_3['text'] = 'Выиграли: Ничья'
+
+
+# #label- это окошко или пространство где можно что-то написать и там можно поместить что-то ну там фото или ищё что-то
+# text_2 = Label(text='ГЕНИЙ ИИ',
+#                bg='black',
+#                fg='Green',
+#                font=15)
+# text_2.place(x=50, y=40)
+
+# text_3 = Label(text='Выигравший эту жизнь',
+#                bg='black',
+#                fg='Green',
+#                font=15)
+# text_3.place(x=20, y=100)
+
+# # Ну тож создаёт кнопочки
+# cnopka_camen = Button(text='Камень',
+#                       bg='black',
+#                       fg='Green',
+#                       font=15,
+#                       command=kamen)
+# cnopka_camen.place(x=65, y=160)
+
+# cnopka_nojnic = Button(text='Ножницы',
+#                        bg='black',
+#                        fg='Green',
+#                        font=15,
+#                        command=nojnic)
+# cnopka_nojnic.place(x=65, y=220)
+
+# cnopka_bym = Button(text='Бумага',
+#                     bg='black',
+#                     fg='Green',
+#                     font=15,
+#                     command=bym)
+# cnopka_bym.place(x=65, y=280)
+
+# # mainloop это чтото типо while True бесконечность короче делает так чтобы оно работало вечно я не знаю как но без него окошко не появиться
+# root.mainloop()
