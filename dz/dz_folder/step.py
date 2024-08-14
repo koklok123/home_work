@@ -1,0 +1,1 @@
+exponentiate = lambda base, exp: base ** exp
