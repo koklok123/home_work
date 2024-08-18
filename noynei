@@ -1,0 +1,117 @@
+import sqlite3
+
+connect = sqlite3.connect("School.db")
+cursor = connect.cursor()
+cursor.execute("""CREATE TABLE IF NOT EXISTS students(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    full_name TEXT NOT NULL,
+    age INTEGER,
+    grade FLOAT NOT NULL,  
+    enrollment_date DATE
+)
+""")
+
+def pip():
+    full_name = input("Введите своё ФИО: ")
+    age = int(input("Введите свой возраст: "))
+    grade = float(input("Введите свою оценку: "))
+    enrollment_date = input("Введите вашу дату зачисления: ")
+
+    cursor.execute("""INSERT INTO students
+                      (full_name, age, grade, enrollment_date)
+                      VALUES (?, ?, ?, ?)""", (full_name, age, grade, enrollment_date))
+    connect.commit()
+
+pip()
+
+"""Создайте функцию register_student(), которая запрашивает у пользователя данные о студенте (полное имя, возраст, класс) и добавляет эту информацию в таблицу students."""
+
+cursor.execute("""CREATE TABLE IF NOT EXISTS student(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    full_name TEXT NOT NULL,
+    age INEGER,
+    school_class TEXT NOT NULL
+)
+""")
+
+
+def register_student():
+    full_name = input("Введите ваше имя: ")
+    age = int(input("Введите ваш возраст: "))
+    school_class = input("Введите ваш класс: ")
+
+
+    connect = sqlite3.connect("School.db")
+    cursor = connect.cursor()
+    cursor.execute("""INSERT INTO student
+                          (full_name, age, school_class)
+                          VALUES (?, ?, ?)""", (full_name, age, school_class))
+
+cursor_2 = connect.cursor()
+cursor_2.execute("""
+CREATE TABLE IF NOT EXISTS subjects(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    subject_name TEXT NOT NULL,
+    teacher_name TEXT NOT NULL
+)
+""")
+
+def add_subject():
+    subject_name = input("Введите название предмета: ")
+    teacher_name = input("Введите имя учителя: ")
+    
+    cursor_2.execute("""
+        INSERT INTO subjects 
+        (subject_name, teacher_name)
+        VALUES (?, ?)""", (subject_name, teacher_name))
+    connect.commit()
+
+add_subject()
+
+
+
+def get_students():
+    cursor.execute("SELECT * FROM students")
+    finaly = cursor.fetchall()
+    for i in finaly:
+        print(i)
+
+def get_subjects():
+    cursor_2.execute("SELECT * FROM subjects")
+    info = cursor_2.fetchall()
+    for ih in info:
+        print(ih)
+
+def get_students_by_grade(grade):
+    cursor.execute("SELECT * FROM students WHERE grade = ?", (grade,))
+    students_2 = cursor.fetchall()
+    for ik in students_2:
+        print(ik)
+    
+get_students()
+get_subjects()
+get_students_by_grade(5.0)
+
+
+
+
+
+def update_student_age(student_id, new_age):
+    
+    cursor.execute("""CREATE TABLE IF NOT EXISTS students(
+    id INTEGER PRIMARY KEY AUTOINCREMENT)
+""", )
+connect.commit()
+
+input_student_id = int(input("Введите ID студента для обновления возраста:: "))
+input_new_age = int(input("Введите новый возраст: "))
+
+update_student_age(input_student_id, input_new_age)
+    
+cursor.close()
+cursor_2.close()
+connect.close()
+
+
+def delete_student():
+    connect.execute("DELETE FROM students WHERE id")
