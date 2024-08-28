@@ -1,0 +1,155 @@
+import sqlite3
+
+class DatabaseManager:
+    def __init__(self, db_name='example.db'):
+        self.db_name = db_name
+        self.connection = None
+
+    def open_connection(self):
+        self.connection = sqlite3.connect(self.db_name)
+        print("Соединение открыто")
+
+    def close_connection(self):
+        if self.connection:
+            self.connection.close()
+            print("Соединение закрыто")
+
+
+db_manager = DatabaseManager()
+db_manager.open_connection()
+db_manager.close_connection()
+
+class User:
+    def __init__(self):
+        self.con = sqlite3.connect("table.db")
+        self.cur = self.con.cursor()
+        self.cur.execute("""CREATE TABLE IF NOT EXISTS polwa(
+                             id INTEGER)""")
+    
+    def dobal(self):
+        self.id = input("Введите ID пользователя: ")
+    
+    def save_pol(self):
+        self.cur.execute("INSERT INTO polwa (id) VALUES (?)", (self.id,))
+        self.con.commit()
+        print(f"id пользователя-{self.id}")
+          
+    def ydal(self, marka_value):
+        self.cur.execute("DELETE FROM carr WHERE marka = ?", (marka_value,))
+        self.con.commit()
+        print(f"marka '{marka_value}' удален из базы данных")
+
+class Admin(User):
+    def __init__(self):
+        super().__init__()
+        self.cur.execute("""CREATE TABLE IF NOT EXISTS admins(
+                             id INTEGER)""")
+    
+    def choise(self):
+        self.vobor = input("Хотите активировать права администратора? 1-Да")
+    
+    def save_pol(self):
+        self.cur.execute("INSERT INTO admins (id) VALUES (?)", (self.id,))
+        self.con.commit()
+        print(f"id пользователя-{self.id}")
+    
+    def ydal(self, marka_value):
+        super().ydal(marka_value)
+        if self.vobor == "1":
+            print("Права администратора получены, вы можете удалить пользователя по id")
+        else:
+            print("Неизвестная ошибка, обратитесь в техподдержку")
+
+user = User()
+user.dobal()
+user.save_pol()
+user.ydal()
+
+class Customer(User):
+    def __init__(self):
+        super().__init__()
+        self.cur.execute("""CREATE TABLE IF NOT EXISTS client_2(
+                             id INTEGER, 
+                             name TEXT)""")
+    
+    def dobal_client(self):
+        self.name = input("Введите имя клиента: ")
+    
+    def save_client(self):
+        self.cur.execute("INSERT INTO client_2 (name) VALUES (?)", (self.name,))
+        self.con.commit()
+        print(f"Клиент {self.name} сохранен в базе данных.")
+
+
+
+admin = Admin()
+admin.dobal()
+admin.choise()
+admin.save_pol()
+admin.ydal()
+
+customer = Customer()
+customer.dobal_client()
+customer.save_client()
+
+            
+
+"""5. Работа с транзакциями
+
+Добавьте в класс DatabaseManager метод, который будет выполнять несколько операций с базой данных в одной транзакции. Реализуйте простую логику для добавления нескольких записей в таблицу и откат транзакции в случае ошибки."""
+
+
+import sqlite3
+
+
+c = sqlite3.connect("balance.db")
+cur = c.cursor()
+
+cur.execute("""CREATE TABLE IF NOT EXISTS bank(
+                id INTEGER PRIMARY KEY, 
+                balance REAL)""")
+
+class DatabaseManager:
+    def __init__(self):
+        cur.execute("SELECT balance FROM bank WHERE id = 1")
+        row = cur.fetchone()
+        if row:
+            self.balance = row[0]
+        else:
+            self.balance = 0
+            cur.execute("INSERT INTO bank (id, balance) VALUES (1, ?)", (self.balance,))
+            c.commit()
+
+    def deposit(self, popol):
+        self.balance += popol
+        cur.execute("UPDATE bank SET balance = ? WHERE id = 1", (self.balance,))
+        c.commit()
+
+    def withdraw(self, minus):
+        if self.balance >= minus:
+            self.balance -= minus
+            cur.execute("UPDATE bank SET balance = ? WHERE id = 1", (self.balance,))
+            c.commit()
+        else:
+            print("Недостаточно средств")
+
+    def get_balance(self):
+        return self.balance
+
+account = DatabaseManager()
+
+choice = input("Выберите действие (1-получение средств, 2-вывод средств): ")
+print(f"Ваш выбор: {choice}")
+
+if choice == "1":
+    ckok = float(input("На какую сумму вы хотите пополнить свой баланс: "))
+    account.deposit(ckok)
+
+elif choice == "2":
+    minus = float(input("Какую сумму вы хотите снять со счета: "))
+    account.withdraw(minus)
+
+else:
+    print("Неизвестная ошибка")
+
+print(f"Текущий баланс: {account.get_balance()}")
