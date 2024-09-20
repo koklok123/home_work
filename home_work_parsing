@@ -1,0 +1,49 @@
+from bs4 import BeautifulSoup
+import requests
+from aiogram import Bot, Dispatcher
+from aiogram.filters import CommandStart
+from aiogram.types import Message
+import asyncio
+import logging
+from confic import API_TOKEN
+
+bot = Bot(token=API_TOKEN)
+dp = Dispatcher()
+
+@dp.message(CommandStart())
+async def start_command(message: Message):
+    rates = await parsing_barmak()
+    await message.answer(f"Добро пожаловать! Сейчас я покажу вам курсы валют:\n {rates}")
+
+@dp.message()
+async def echo(message: Message):
+    await message.answer("Введите команду /start")
+
+async def parsing_barmak():
+    response = requests.get(url="https://www.nbkr.kg/index.jsp?lang=RUS")
+    soup = BeautifulSoup(response.text, 'lxml')
+
+    block = soup.find('div', class_='exchange-rates block')
+    
+    if block:
+        rows = block.find_all('tr')
+        rates = []
+        for row in rows[1:]: 
+            cols = row.find_all('td')
+            if len(cols) >= 2:
+                currency = cols[0].text.strip()
+                rate = cols[1].text.strip()
+                rates.append(f"{currency}: {rate}")
+        return "\n".join(rates)
+    else:
+        return "Блок с курсами валют не найден."
+
+async def main():
+    logging.basicConfig(level=logging.INFO)
+    await dp.start_polling(bot)
+
+if __name__ == "__main__":
+    try:
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        print("Exit")
