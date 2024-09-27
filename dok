@@ -1,0 +1,125 @@
+import asyncio
+import sqlite3
+import logging
+
+from aiogram import Bot, Dispatcher, F
+from aiogram.types import Message, BotCommand, CallbackQuery
+from aiogram.filters import Command, CommandStart
+from aiogram.exceptions import TelegramForbiddenError
+from config import API_TOKEN
+
+logging.basicConfig(level=logging.INFO)
+
+conn = sqlite3.connect('mio.db', check_same_thread=False)
+cur = conn.cursor()
+
+cur.execute("""
+    CREATE TABLE IF NOT EXISTS users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        first_name VARCHAR,
+        user_id INTEGER UNIQUE,
+        chat_id INTEGER,
+        is_admin BOOLEAN NOT NULL DEFAULT FALSE
+    )
+""")
+conn.commit()
+
+cur.execute("INSERT OR IGNORE INTO users (first_name, user_id, chat_id, is_admin) VALUES (?, ?, ?, ?)",
+            ("Admin", 7330044396, 0, True))
+conn.commit()
+
+bot = Bot(token=API_TOKEN)
+dp = Dispatcher()
+
+users = set()
+admin_ids = {5453944407}
+
+@dp.message(CommandStart())
+async def start_bot(message: Message):
+    user_id = message.from_user.id
+    first_name = message.from_user.first_name
+    chat_id = message.chat.id
+
+    cur.execute("SELECT * FROM users WHERE user_id = ?", (user_id,))
+    user = cur.fetchone()
+
+    if user is None:
+        cur.execute("INSERT INTO users (first_name, user_id, chat_id) VALUES (?, ?, ?)",
+                    (first_name, user_id, chat_id))
+        conn.commit()
+        await message.reply(f"Привет, {first_name}! Вы успешно зарегистрированы.")
+    else:
+        await message.reply(f"Привет снова, {first_name}!")
+
+    users.add(user_id)
+
+@dp.message(Command("malling"))
+async def add_admin(message: Message):
+    if message.from_user.id not in admin_ids:
+        await message.answer("У вас нет прав для выполнения этой команды.")
+        return
+
+    if len(message.text.split()) < 2:
+        await message.answer("Пожалуйста, укажите сообщение для рассылки.")
+        return
+
+    broadcast_message = message.text.split(maxsplit=1)[1]
+
+    cur.execute("SELECT user_id FROM users")
+    for row in cur.fetchall():
+        users.add(row[0])
+
+    success_count = 0
+    fail_count = 0
+
+    for user_id in users:
+        try:
+            await bot.send_message(user_id, broadcast_message)
+            success_count += 1
+        except TelegramForbiddenError:
+            logging.error(f"Не удалось отправить сообщение пользователю {user_id}, бот заблокирован.")
+            fail_count += 1
+        except Exception as e:
+            logging.error(f"Ошибка при отправке сообщения пользователю {user_id}: {e}")
+            fail_count += 1
+
+        await asyncio.sleep(0.05)
+
+    await message.answer(f"Рассылка завершена.\nУспешно: {success_count}\nНе удалось: {fail_count}")
+
+@dp.message(Command("help"))
+async def help_command(message: Message):
+    await message.reply("Доступные команды:\n"
+                        "/start - начать работу\n"
+                        "/malling - отправить сообщение всем\n"
+                        "/help - список команд")
+@dp.callback_query(F.data == 'ad')
+async def add(callback: CallbackQuery):
+    cur.execute(f"UPDATE users SET is_admin = 1 WHERE user_id = {callback.from_user.id}")
+    c.commit()
+    await callback.answer("add_admin")
+    await callback.message.answer("Вы теперь админ")
+
+@dp.callback_query(F.data == 'de')
+async def de(callback: CallbackQuery):
+    cur.execute(F"UPDATE users SET is_admin = 0 WHERE user_id = {callback.from_user.id}")
+    await callback.answer("de")
+    await callback.message.answer("Вы теперь не админ")
+
+
+async def on_start():
+    await bot.set_my_commands([
+        BotCommand(command="/start", description="Начать работу"),
+        BotCommand(command="/malling", description="Отправить сообщение всем"),
+        BotCommand(command="/help", description="Список команд")
+    ])
+
+async def main():
+    dp.startup.register(on_start)
+    await dp.start_polling(bot)
+
+if __name__ == "__main__":
+    try:
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        logging.info("Бот остановлен.")
